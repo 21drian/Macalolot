@@ -22,7 +22,7 @@
         <AnchorPane fx:id="sidebarContainer" layoutX="0.0" layoutY="0.0" prefHeight="800.0" prefWidth="250.0" />
 
         <!-- Main content area background -->
-        <Rectangle arcWidth="5.0" fill="#f4f7fa" height="800.0" layoutX="250.0" strokeWidth="0.0" width="1211.0" />
+        <Rectangle arcWidth="5.0" fill="#f4f7fa" height="800.0" layoutX="250.0" strokeWidth="0.0" width="1210.0" />
 
         <!-- Top header -->
         <HBox alignment="CENTER_LEFT" layoutX="260.0" layoutY="20.0" prefHeight="70.0" prefWidth="820.0">
@@ -58,7 +58,7 @@
         </TableView>
 
         <!-- Add Product Button -->
-        <Button fx:id="addProductButton" layoutX="270.0" layoutY="80.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #940857; -fx-text-fill: white; -fx-font-size: 14;" text="Add Product">
+        <Button fx:id="addProductButton" layoutX="270.0" layoutY="80.0" mnemonicParsing="false" onAction="#addProductModal" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #940857; -fx-text-fill: white; -fx-font-size: 14;" text="Add Product">
             <graphic>
                 <ImageView fitHeight="18.0" fitWidth="18.0" preserveRatio="true" />
             </graphic>

@@ -24,7 +24,6 @@ import pos.model.DBconnection;
 import pos.model.Product;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import pos.sidebar.SBController;
 
 public class ProductController implements Initializable {
 
@@ -33,9 +32,6 @@ public class ProductController implements Initializable {
     private Label roleType;
     @FXML
     private AnchorPane sidebarContainer;
-
-    private String role;
-    private String email;
 
     @FXML private TableView<Product> tableView;
     @FXML private TableColumn<Product, Integer> idColumn;
@@ -87,16 +83,6 @@ public class ProductController implements Initializable {
 
         Stage logoutStage = (Stage) logoutButton.getScene().getWindow();
         logoutStage.close();
-    }
-
-    public void setUserInfo(String email, String role) {
-        this.email = email;
-        this.role = role;
-
-        cashierName.setText(email);
-        roleType.setText(role);
-        
-        
     }
 
     private void setupTableColumns() {
@@ -153,6 +139,17 @@ public class ProductController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error loading products: " + e.getMessage());
+        }
+    }
+
+    @FXML
+    private void addProductModal(ActionEvent event) throws IOException {
+        if(event.getSource() == addProductButton){
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/pos/modal/AddProductModal.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
         }
     }
 }
