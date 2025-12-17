@@ -6,14 +6,15 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.ComboBox?>
 
-<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="1080.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pos.controller.ProductController">
+<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="1440.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pos.controller.ProductController">
 
     <stylesheets>
         <URL value="@/pos/css/product.css" />
@@ -21,71 +22,107 @@
 
     <children>
         <!-- Sidebar placeholder -->
-        <AnchorPane fx:id="sidebarContainer" layoutX="0.0" layoutY="0.0" prefHeight="800.0" prefWidth="250.0" />
+        <AnchorPane fx:id="sidebarContainer" layoutX="0.0" layoutY="0.0" prefHeight="800.0" prefWidth="250.0" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" />
 
-        <!-- Main content area background -->
-        <Rectangle arcWidth="5.0" fill="#f4f7fa" height="800.0" layoutX="250.0" strokeWidth="0.0" width="1210.0" />
+        <!-- Main Content Area - STARTS AFTER SIDEBAR -->
+        <AnchorPane layoutX="250.0" layoutY="0.0" prefHeight="800.0" prefWidth="1190.0" style="-fx-background-color: #f0f2f5;" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0">
+            
+            <VBox spacing="20" AnchorPane.topAnchor="20.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+                
+                <!-- Header Section -->
+                <HBox alignment="CENTER_LEFT" spacing="16" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20 24; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                    <VBox spacing="4" HBox.hgrow="ALWAYS">
+                        <Label style="-fx-text-fill: #2c3e50; -fx-font-weight: bold;" text="📦 Product Management">
+                            <font><Font name="Arial Bold" size="26" /></font>
+                        </Label>
+                        <Label style="-fx-text-fill: #6c757d; -fx-font-size: 14px;" text="Manage your inventory and product catalog">
+                            <font><Font name="Arial" size="14" /></font>
+                        </Label>
+                    </VBox>
+                    
+                    <VBox alignment="CENTER" spacing="4" style="-fx-background-color: #f8f9fa; -fx-padding: 12 20; -fx-background-radius: 8;">
+                        <Label style="-fx-text-fill: #6c757d; -fx-font-size: 11px; -fx-font-weight: 600;" text="TOTAL PRODUCTS" />
+                        <Label style="-fx-text-fill: #940857; -fx-font-size: 20px; -fx-font-weight: bold;" text="0">
+                            <font><Font name="Arial Bold" size="20" /></font>
+                        </Label>
+                    </VBox>
+                </HBox>
 
-        <!-- Top header -->
-        <HBox alignment="CENTER_LEFT" layoutX="260.0" layoutY="20.0" prefHeight="70.0" prefWidth="820.0">
-            <children>
-                <Label style="-fx-font-family: Poppins;" text="Product Management">
-                    <font>
-                        <Font name="Arial" size="24.0" />
-                    </font>
-                </Label>
-            </children>
-        </HBox>
-        
-        <ComboBox fx:id="cmbStatus"
-          promptText="Status"
-          prefWidth="150"/>
+                <!-- Action Buttons Section -->
+                <VBox spacing="12" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 16 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                    
+                    <!-- Primary Actions Row -->
+                    <VBox spacing="8">
+                        <Label style="-fx-text-fill: #495057; -fx-font-size: 12px; -fx-font-weight: 600;" text="QUICK ACTIONS" />
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Button fx:id="addProductButton" mnemonicParsing="false" onAction="#addProductModal" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: linear-gradient(to right, #940857 0%, #c41766 100%); -fx-text-fill: white; -fx-font-size: 14px; -fx-font-weight: 600; -fx-background-radius: 8; -fx-cursor: hand; -fx-effect: dropshadow(gaussian, rgba(148,8,87,0.3), 8, 0, 0, 2);" text="+ Add Product">
+                                <graphic>
+                                    <ImageView fitHeight="18.0" fitWidth="18.0" preserveRatio="true" />
+                                </graphic>
+                            </Button>
+                            
+                            <Button onAction="#updateProduct" prefHeight="40.0" style="-fx-background-color: #0dcaf0; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: 600; -fx-background-radius: 8; -fx-cursor: hand;" text="✏ Update Product" />
+                            
+                            <Button onAction="#deleteProduct" prefHeight="40.0" style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-font-size: 13px; -fx-font-weight: 600; -fx-background-radius: 8; -fx-cursor: hand;" text="🗑 Delete Product" />
+                            
+                            <Region HBox.hgrow="ALWAYS" />
+                            
+                            <VBox spacing="4">
+                                <Label style="-fx-text-fill: #6c757d; -fx-font-size: 11px; -fx-font-weight: 600;" text="FILTER" />
+                                <ComboBox fx:id="cmbStatus" promptText="All Status" prefWidth="150" prefHeight="40" style="-fx-background-color: white; -fx-border-color: #dee2e6; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8;" />
+                            </VBox>
+                        </HBox>
+                    </VBox>
 
+                    <!-- Management Actions Row -->
+                    <VBox spacing="8">
+                        <Label style="-fx-text-fill: #495057; -fx-font-size: 12px; -fx-font-weight: 600;" text="MANAGE" />
+                        <HBox spacing="10" alignment="CENTER_LEFT">
+                            <Button onAction="#openSupplierManager" prefHeight="40.0" style="-fx-background-color: white; -fx-text-fill: #495057; -fx-border-color: #dee2e6; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13px; -fx-cursor: hand; -fx-padding: 0 16;" text="Manage Suppliers" />
+                            
+                            <Button onAction="#openCategoryManager" prefHeight="40.0" style="-fx-background-color: white; -fx-text-fill: #495057; -fx-border-color: #dee2e6; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13px; -fx-cursor: hand; -fx-padding: 0 16;" text="Manage Categories" />
+                            
+                            <Button onAction="#openVariantManager" prefHeight="40.0" style="-fx-background-color: white; -fx-text-fill: #495057; -fx-border-color: #dee2e6; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13px; -fx-cursor: hand; -fx-padding: 0 16;" text="Manage Variants" />
+                            
+                            <Button onAction="#openModifierManager" prefHeight="40.0" style="-fx-background-color: white; -fx-text-fill: #495057; -fx-border-color: #dee2e6; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13px; -fx-cursor: hand; -fx-padding: 0 16;" text="Manage Modifiers" />
+                            
+                            <Button onAction="#openBundleManager" prefHeight="40.0" style="-fx-background-color: white; -fx-text-fill: #495057; -fx-border-color: #dee2e6; -fx-border-width: 1.5; -fx-border-radius: 8; -fx-background-radius: 8; -fx-font-size: 13px; -fx-cursor: hand; -fx-padding: 0 16;" text="Manage Bundle" />
+                        </HBox>
+                    </VBox>
+                </VBox>
 
-        <!-- Product table -->
-        <TableView fx:id="tableView" layoutX="270.0" layoutY="140.0" prefHeight="500.0" prefWidth="1178.0">
-            <columns>
-                <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID" />
-                <TableColumn fx:id="nameColumn" prefWidth="100.0" text="Name" />
-                <TableColumn fx:id="descriptionColumn" prefWidth="120.0" text="Description" />
-                <TableColumn fx:id="categoryColumn" prefWidth="90.0" text="Category" />
-                <TableColumn fx:id="supplierColumn" prefWidth="90.0" text="Supplier" />
-                <TableColumn fx:id="skuColumn" prefWidth="80.0" text="SKU" />
-                <TableColumn fx:id="barcodeColumn" prefWidth="80.0" text="Barcode" />
-                <TableColumn fx:id="inventoryColumn" prefWidth="80.0" text="Inventory" />
-                <TableColumn fx:id="initialStockColumn" prefWidth="80.0" text="Initial Stock" />
-                <TableColumn fx:id="currentStockColumn" prefWidth="80.0" text="Current Stock" />
-                <TableColumn fx:id="imageColumn" prefWidth="80.0" text="Image Stock" />
-                <TableColumn fx:id="baseUnitColumn" prefWidth="90.0" text="Base Unit" />
-                <TableColumn fx:id="priceColumn" prefWidth="80.0" text="Price" />
-                <TableColumn fx:id="costColumn" prefWidth="80.0" text="Cost" />
-                <TableColumn fx:id="activeColumn" prefWidth="90.0" text="Active Column" />
-                <TableColumn fx:id="createdAtColumn" prefWidth="90.0" text="Create At" />
-            </columns>
-        </TableView>
-      <HBox alignment="CENTER_LEFT" layoutX="262.0" layoutY="75.0" prefHeight="54.0" prefWidth="1184.0" spacing="8.0">
-         <children>
-      
-              <!-- Add Product Button -->
-              <Button fx:id="addProductButton" mnemonicParsing="false" onAction="#addProductModal" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #940857; -fx-text-fill: white; -fx-font-size: 14;" text="Add Product">
-                  <graphic>
-                      <ImageView fitHeight="18.0" fitWidth="18.0" preserveRatio="true" />
-                  </graphic>
-              </Button>
-                <Button onAction="#openSupplierManager" text="Manage Suppliers" />
-                <Button onAction="#openCategoryManager" text="Manage Categories" />
-                <Button layoutX="720.0" layoutY="80.0" onAction="#openVariantManager" text="Manage Variants" />
-                <Button layoutX="860.0" layoutY="80.0" onAction="#openModifierManager" text="Manage Modifiers" />
-                <Button layoutX="1010.0" layoutY="80.0" onAction="#openBundleManager" text="Manage Bundle" />
-                <Button text="Update Product" onAction="#updateProduct" />
-                <Button text="Delete Product" onAction="#deleteProduct" />
-
-         </children>
-         <padding>
-            <Insets top="10.0" />
-         </padding>
-      </HBox>
-        
-        
+                <!-- Product Table -->
+                <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 10, 0, 0, 2);">
+                    <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-padding: 0 0 12 0;">
+                        <Label style="-fx-text-fill: #495057; -fx-font-size: 14px; -fx-font-weight: 600;" text="PRODUCT INVENTORY">
+                            <font><Font name="Arial" size="14" /></font>
+                        </Label>
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Label style="-fx-background-color: #f8f9fa; -fx-text-fill: #6c757d; -fx-padding: 6 12; -fx-background-radius: 8; -fx-font-size: 11px;" text="All Products" />
+                    </HBox>
+                    
+                    <TableView fx:id="tableView" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-border-color: #e9ecef; -fx-border-radius: 8; -fx-border-width: 1;">
+                        <columns>
+                            <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID" style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="nameColumn" prefWidth="120.0" text="Name" />
+                            <TableColumn fx:id="descriptionColumn" prefWidth="140.0" text="Description" />
+                            <TableColumn fx:id="categoryColumn" prefWidth="90.0" text="Category" style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="supplierColumn" prefWidth="90.0" text="Supplier" style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="skuColumn" prefWidth="80.0" text="SKU" style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="barcodeColumn" prefWidth="90.0" text="Barcode" style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="inventoryColumn" prefWidth="80.0" text="Inventory" style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="initialStockColumn" prefWidth="90.0" text="Initial Stock" style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="currentStockColumn" prefWidth="100.0" text="Current Stock" style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="imageColumn" prefWidth="80.0" text="Image" style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="baseUnitColumn" prefWidth="90.0" text="Base Unit" style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="priceColumn" prefWidth="80.0" text="Price" style="-fx-alignment: CENTER-RIGHT;" />
+                            <TableColumn fx:id="costColumn" prefWidth="80.0" text="Cost" style="-fx-alignment: CENTER-RIGHT;" />
+                            <TableColumn fx:id="activeColumn" prefWidth="80.0" text="Active" style="-fx-alignment: CENTER;" />
+                            <TableColumn fx:id="createdAtColumn" prefWidth="110.0" text="Created At" style="-fx-alignment: CENTER;" />
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </AnchorPane>
     </children>
 </AnchorPane>

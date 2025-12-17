@@ -1,43 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<?import java.lang.*?>
-<?import java.net.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import java.net.URL?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<?import javafx.geometry.Insets?>
 
-<AnchorPane prefWidth="760" prefHeight="420"
-            xmlns="http://javafx.com/javafx/24.0.1"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="pos.controller.ModifierManagementController">
+<AnchorPane prefWidth="700" prefHeight="450" minWidth="600" minHeight="380" style="-fx-background-color: #f0f2f5;" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pos.controller.ModifierManagementController">
     
-        <stylesheets>
-            <URL value="@/pos/css/modifiermanagement.css"/>
-        </stylesheets>
-    <VBox spacing="10" layoutX="15" layoutY="15">
-        <Label fx:id="lblTitle" text="Manage Modifiers" style="-fx-font-size: 18;"/>
-
-        <TableView fx:id="tableView" prefHeight="230">
-            <columns>
-                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
-                <TableColumn fx:id="colName" text="Name" prefWidth="220"/>
-                <TableColumn fx:id="colType" text="Type" prefWidth="100"/>
-                <TableColumn fx:id="colRequired" text="Required" prefWidth="90"/>
-            </columns>
-        </TableView>
-
-        <HBox spacing="10">
-            <TextField fx:id="txtName" promptText="Modifier name (e.g. Size)" prefWidth="220"/>
-            <ComboBox fx:id="cmbType" prefWidth="120" promptText="type"/>
-            <CheckBox fx:id="chkRequired" text="Required"/>
-            <Button text="Options..." onAction="#openOptions"/>
+    <stylesheets>
+        <URL value="@/pos/css/modifiermanagement.css"/>
+    </stylesheets>
+    
+    <VBox spacing="12" AnchorPane.topAnchor="12" AnchorPane.bottomAnchor="12" AnchorPane.leftAnchor="12" AnchorPane.rightAnchor="12">
+        
+        <!-- Compact Header Section -->
+        <HBox alignment="CENTER_LEFT" spacing="12" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 14 18; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+            <VBox spacing="2" HBox.hgrow="ALWAYS">
+                <Label fx:id="lblTitle" style="-fx-text-fill: #2c3e50; -fx-font-size: 18px; -fx-font-weight: bold;" text="🔧 Manage Modifiers">
+                    <font><Font name="Arial Bold" size="18" /></font>
+                </Label>
+                <Label style="-fx-text-fill: #6c757d; -fx-font-size: 11px;" text="Configure product options and modifiers" />
+            </VBox>
+            <Label style="-fx-background-color: #e9ecef; -fx-text-fill: #6c757d; -fx-padding: 4 12; -fx-background-radius: 12; -fx-font-size: 11px; -fx-font-weight: 600;" text="0 MODIFIERS" />
         </HBox>
-
-        <HBox spacing="10">
-            <Button text="Add" onAction="#addModifier"/>
-            <Button text="Update" onAction="#updateModifier"/>
-            <Button text="Delete" onAction="#deleteModifier"/>
-        </HBox>
+        
+        <!-- Table Section with Priority -->
+        <VBox spacing="8" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+            <Label style="-fx-text-fill: #495057; -fx-font-size: 12px; -fx-font-weight: 600;" text="MODIFIER LIST">
+                <font><Font name="Arial" size="12" /></font>
+            </Label>
+            
+            <TableView fx:id="tableView" VBox.vgrow="ALWAYS" style="-fx-background-color: white; -fx-border-color: #e9ecef; -fx-border-radius: 8; -fx-border-width: 1;">
+                <columns>
+                    <TableColumn fx:id="colId" text="ID" prefWidth="60" minWidth="50" style="-fx-alignment: CENTER;"/>
+                    <TableColumn fx:id="colName" text="Modifier Name" prefWidth="280" minWidth="150"/>
+                    <TableColumn fx:id="colType" text="Type" prefWidth="140" minWidth="100" style="-fx-alignment: CENTER;"/>
+                    <TableColumn fx:id="colRequired" text="Required" prefWidth="120" minWidth="90" style="-fx-alignment: CENTER;"/>
+                </columns>
+            </TableView>
+        </VBox>
+        
+        <!-- Compact Form Section -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+            <Label style="-fx-text-fill: #495057; -fx-font-size: 12px; -fx-font-weight: 600;" text="MODIFIER DETAILS">
+                <font><Font name="Arial" size="12" /></font>
+            </Label>
+            
+            <!-- Input Fields Row -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label style="-fx-text-fill: #495057; -fx-font-size: 11px; -fx-font-weight: 600;" text="Modifier Name" />
+                    <TextField fx:id="txtName" promptText="e.g. Size, Color, Toppings" style="-fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 6; -fx-background-radius: 6; -fx-border-width: 1.5; -fx-padding: 10;" HBox.hgrow="ALWAYS" />
+                </VBox>
+                
+                <VBox spacing="4">
+                    <Label style="-fx-text-fill: #495057; -fx-font-size: 11px; -fx-font-weight: 600;" text="Type" />
+                    <ComboBox fx:id="cmbType" promptText="Select type" prefWidth="140" style="-fx-background-color: white; -fx-border-color: #dee2e6; -fx-border-radius: 6; -fx-background-radius: 6; -fx-border-width: 1.5;" />
+                </VBox>
+                
+                <VBox spacing="4" alignment="BOTTOM_LEFT">
+                    <Label style="-fx-text-fill: #495057; -fx-font-size: 11px; -fx-font-weight: 600;" text=" " />
+                    <CheckBox fx:id="chkRequired" text="Required" style="-fx-text-fill: #495057; -fx-font-weight: 600; -fx-font-size: 12px;" />
+                </VBox>
+                
+                <VBox spacing="4" alignment="BOTTOM_LEFT">
+                    <Label style="-fx-text-fill: #495057; -fx-font-size: 11px; -fx-font-weight: 600;" text=" " />
+                    <Button onAction="#openOptions" prefHeight="36" style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 12px; -fx-font-weight: 600; -fx-padding: 0 16;" text="⚙ Options..." />
+                </VBox>
+            </HBox>
+            
+            <!-- Compact Action Buttons -->
+            <HBox spacing="8" alignment="CENTER" style="-fx-padding: 6 0 0 0;">
+                <Button onAction="#addModifier" prefHeight="36" prefWidth="140" style="-fx-background-color: linear-gradient(to right, #940857 0%, #c41766 100%); -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 13px; -fx-font-weight: 600; -fx-effect: dropshadow(gaussian, rgba(148,8,87,0.3), 6, 0, 0, 2);" text="➕ Add">
+                    <font><Font name="Arial" size="13" /></font>
+                </Button>
+                
+                <Button onAction="#updateModifier" prefHeight="36" prefWidth="140" style="-fx-background-color: #0dcaf0; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 13px; -fx-font-weight: 600;" text="✏ Update">
+                    <font><Font name="Arial" size="13" /></font>
+                </Button>
+                
+                <Button onAction="#deleteModifier" prefHeight="36" prefWidth="140" style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 13px; -fx-font-weight: 600;" text="🗑 Delete">
+                    <font><Font name="Arial" size="13" /></font>
+                </Button>
+            </HBox>
+        </VBox>
+        
     </VBox>
 </AnchorPane>
