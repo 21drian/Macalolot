@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -36,7 +37,7 @@
         </HBox>
 
         <!-- Product table -->
-        <TableView fx:id="tableView" layoutX="270.0" layoutY="120.0" prefHeight="500.0" prefWidth="1178.0">
+        <TableView fx:id="tableView" layoutX="270.0" layoutY="140.0" prefHeight="500.0" prefWidth="1178.0">
             <columns>
                 <TableColumn fx:id="idColumn" prefWidth="50.0" text="ID" />
                 <TableColumn fx:id="nameColumn" prefWidth="100.0" text="Name" />
@@ -56,12 +57,27 @@
                 <TableColumn fx:id="createdAtColumn" prefWidth="90.0" text="Create At" />
             </columns>
         </TableView>
+      <HBox alignment="CENTER_LEFT" layoutX="262.0" layoutY="75.0" prefHeight="54.0" prefWidth="1184.0" spacing="8.0">
+         <children>
+      
+              <!-- Add Product Button -->
+              <Button fx:id="addProductButton" mnemonicParsing="false" onAction="#addProductModal" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #940857; -fx-text-fill: white; -fx-font-size: 14;" text="Add Product">
+                  <graphic>
+                      <ImageView fitHeight="18.0" fitWidth="18.0" preserveRatio="true" />
+                  </graphic>
+              </Button>
+                <Button onAction="#openSupplierManager" text="Manage Suppliers" />
+                <Button onAction="#openCategoryManager" text="Manage Categories" />
+                <Button layoutX="720.0" layoutY="80.0" onAction="#openVariantManager" text="Manage Variants" />
+                <Button layoutX="860.0" layoutY="80.0" onAction="#openModifierManager" text="Manage Modifiers" />
+                <Button layoutX="1010.0" layoutY="80.0" onAction="#openBundleManager" text="Manage Bundle" />
 
-        <!-- Add Product Button -->
-        <Button fx:id="addProductButton" layoutX="270.0" layoutY="80.0" mnemonicParsing="false" onAction="#addProductModal" prefHeight="35.0" prefWidth="150.0" style="-fx-background-color: #940857; -fx-text-fill: white; -fx-font-size: 14;" text="Add Product">
-            <graphic>
-                <ImageView fitHeight="18.0" fitWidth="18.0" preserveRatio="true" />
-            </graphic>
-        </Button>
+         </children>
+         <padding>
+            <Insets top="10.0" />
+         </padding>
+      </HBox>
+        
+        
     </children>
 </AnchorPane>

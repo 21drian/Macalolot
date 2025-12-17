@@ -35,7 +35,7 @@
         <VBox alignment="TOP_CENTER" layoutY="200.0" prefWidth="250.0" spacing="12">
             <children>
 
-                <Button fx:id="btnDashboard" prefHeight="40.0" prefWidth="230.0" styleClass="menu-btn" text="Dashboard" textAlignment="CENTER">
+                <Button fx:id="btnDashboard" onAction="#handleDashboardAction" prefHeight="40.0" prefWidth="230.0" styleClass="menu-btn" text="Dashboard" textAlignment="CENTER">
                     <graphic>
                         <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                             <image>
@@ -55,7 +55,7 @@
                     </graphic>
                 </Button>
 
-                <Button fx:id="btnSales" prefHeight="40.0" prefWidth="230.0" styleClass="menu-btn" text="Sales" textAlignment="CENTER">
+                <Button fx:id="btnSales" onAction="#handleSalesAction" prefHeight="40.0" prefWidth="230.0" styleClass="menu-btn" text="Sales" textAlignment="CENTER">
                     <graphic>
                         <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                             <image>
@@ -65,7 +65,7 @@
                     </graphic>
                 </Button>
 
-                <Button fx:id="btnReport" prefHeight="40.0" prefWidth="230.0" styleClass="menu-btn" text="Report" textAlignment="CENTER">
+                <Button fx:id="btnReport" onAction="#handleReportAction" prefHeight="40.0" prefWidth="230.0" styleClass="menu-btn" text="Report" textAlignment="CENTER">
                     <graphic>
                         <ImageView fitHeight="20" fitWidth="20" preserveRatio="true">
                             <image>

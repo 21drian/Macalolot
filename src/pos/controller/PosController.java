@@ -37,6 +37,16 @@ public class PosController implements Initializable {
         loadSidebar();
         cashierName.setText( UserSession.getEmail() );
         roleType.setText( UserSession.getRole() );
+        loadTransaction();
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/pos/view/pos_content.fxml"));
+            AnchorPane posContent = loader.load();
+            contentArea.getChildren().setAll(posContent);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+
     }
 
     private void loadSidebar() {
@@ -49,6 +59,22 @@ public class PosController implements Initializable {
             e.printStackTrace();
         }
     }
+    
+    private void loadTransaction() {
+        try {
+            AnchorPane transactionView = FXMLLoader.load(getClass().getResource("/pos/view/Transaction.fxml"));
+            contentArea.getChildren().setAll(transactionView);
+
+            AnchorPane.setTopAnchor(transactionView, 0.0);
+            AnchorPane.setBottomAnchor(transactionView, 0.0);
+            AnchorPane.setLeftAnchor(transactionView, 0.0);
+            AnchorPane.setRightAnchor(transactionView, 0.0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void handleLogoutButton(ActionEvent event) throws IOException {
         if (event.getSource() == logoutButton) {

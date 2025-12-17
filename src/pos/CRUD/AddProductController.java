@@ -18,11 +18,22 @@ import java.io.File;
 
 import java.sql.PreparedStatement;
 import java.sql.Connection;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import pos.model.CategoryDAO;
 import pos.model.DBconnection;
 import session.Category;
 import pos.controller.ProductController;
+import pos.model.Supplier;
+import pos.util.AlertUtil;
+import pos.model.VariantRow;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import javafx.scene.control.cell.PropertyValueFactory;
 
 public class AddProductController implements Initializable {
 
@@ -35,7 +46,7 @@ public class AddProductController implements Initializable {
     @FXML
     private ComboBox<Category> cmbCategory;
     @FXML
-    private ComboBox<?> cmbSupplier;
+    private ComboBox<Supplier> cmbSupplier;
     @FXML
     private TextField txtSKU;
     @FXML
@@ -63,8 +74,23 @@ public class AddProductController implements Initializable {
     
     private Connection conn;
     private ProductController productController;
+    
+    @FXML private TableView<VariantRow> variantTable;
+    @FXML private TableColumn<VariantRow, String> vNameCol;
+    @FXML private TableColumn<VariantRow, String> vSkuCol;
+    @FXML private TableColumn<VariantRow, String> vBarcodeCol;
+    @FXML private TableColumn<VariantRow, Double> vPriceCol;
+    @FXML private TableColumn<VariantRow, Double> vCostCol;
+    @FXML private TableColumn<VariantRow, Integer> vStockCol;
+    @FXML private TableColumn<VariantRow, Boolean> vActiveCol;
 
-//    cmbCategory
+    @FXML private TextField vTxtName, vTxtSku, vTxtBarcode, vTxtPrice, vTxtCost, vTxtStock;
+    @FXML private CheckBox vChkActive;
+
+    private final ObservableList<VariantRow> variantRows = FXCollections.observableArrayList();
+    @FXML
+    private TextField txtDiscount;
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -73,12 +99,38 @@ public class AddProductController implements Initializable {
         cmbInventoryTracking.getItems().addAll("track_stock", "no_track");
         cmbProductType.getItems().addAll("simple", "variable");
         cmbCategory.setItems(CategoryDAO.getAllCategories(conn));
+        cmbSupplier.setItems(pos.model.SupplierDAO.getAllSuppliers(conn));
         
         Category selectedCategory = cmbCategory.getSelectionModel().getSelectedItem();
         if(selectedCategory != null){
             int categoryId = selectedCategory.getId();
             System.out.println("Selected Category ID: " + categoryId);
         }
+        
+        // setup variant columns
+        vNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        vSkuCol.setCellValueFactory(new PropertyValueFactory<>("sku"));
+        vBarcodeCol.setCellValueFactory(new PropertyValueFactory<>("barcode"));
+        vPriceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
+        vCostCol.setCellValueFactory(new PropertyValueFactory<>("cost"));
+        vStockCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
+        vActiveCol.setCellValueFactory(new PropertyValueFactory<>("active"));
+
+        variantTable.setItems(variantRows);
+
+        // Disable variant section unless productType == variable
+        cmbProductType.valueProperty().addListener((obs, old, val) -> {
+            boolean isVariable = "variable".equalsIgnoreCase(val);
+            variantTable.setDisable(!isVariable);
+            vTxtName.setDisable(!isVariable);
+            vTxtSku.setDisable(!isVariable);
+            vTxtBarcode.setDisable(!isVariable);
+            vTxtPrice.setDisable(!isVariable);
+            vTxtCost.setDisable(!isVariable);
+            vTxtStock.setDisable(!isVariable);
+            vChkActive.setDisable(!isVariable);
+        });
+
     }    
 
     @FXML
@@ -90,6 +142,9 @@ public class AddProductController implements Initializable {
     }
     
     private void submitProduct() {
+        double discountPercent = txtDiscount.getText().isEmpty()
+        ? 0.0
+        : Double.parseDouble(txtDiscount.getText());
         try {
             // Check if image is selected
             Object imagePathObj = lblImageName.getUserData();
@@ -108,12 +163,18 @@ public class AddProductController implements Initializable {
                 System.out.println("Please select a category.");
                 return;
             }
-
+            
+            if (cmbSupplier.getSelectionModel().getSelectedItem() == null) {
+                System.out.println("Please select a supplier.");
+                return;
+            }
+            
+            int supplierId = cmbSupplier.getSelectionModel().getSelectedItem().getId();
             String name = txtName.getText();
             String description = txtDescription.getText();
             Category category = cmbCategory.getSelectionModel().getSelectedItem();
             int categoryId = category.getId();
-            int supplierId = 1;
+            
             String sku = txtSKU.getText();
             String barcode = txtBarcode.getText();
             String inventoryTracking = cmbInventoryTracking.getValue() != null ? cmbInventoryTracking.getValue() 
@@ -141,45 +202,58 @@ public class AddProductController implements Initializable {
             String imagesJson = "[\"" + imagePath.replace("\\", "/") + "\"]";
 
             String sql = "INSERT INTO product "
-                       + "(name, description, categoryId, supplierId, sku, barcode, inventoryTracking, baseUnit, price, cost, initialStock, currentStock, reorderLevel, productType, image, images, isActive, createdAt, updatedAt) "
-                       + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+                        + "(name, description, categoryId, supplierId, sku, barcode, inventoryTracking, baseUnit, price, discountPercent, cost, "
+                        + "initialStock, currentStock, reorderLevel, productType, image, images, isActive, createdAt, updatedAt) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
 
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, name);
-            stmt.setString(2, description);
-            stmt.setInt(3, categoryId);
-            stmt.setInt(4, supplierId);
-            stmt.setString(5, sku);
-            stmt.setString(6, barcode);
-            stmt.setString(7, inventoryTracking);
-            stmt.setString(8, baseUnit);
-            stmt.setDouble(9, price);
-            stmt.setDouble(10, cost);
-            stmt.setInt(11, initialStock);
-            stmt.setInt(12, initialStock);
-            stmt.setInt(13, reorderLevel);
-            stmt.setString(14, productType);
-            stmt.setString(15, imagePath);
-            stmt.setString(16, imagesJson);
-            stmt.setBoolean(17, isActive);
 
-            int rowsInserted = stmt.executeUpdate();
-            if (rowsInserted > 0) {
-                javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.INFORMATION);
-                alert.setTitle("Product Successful");
-                alert.setHeaderText(null);
-                alert.setContentText("Product added successfully!");
-                alert.showAndWait();
+            try (PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                stmt.setString(1, name);
+                stmt.setString(2, description);
+                stmt.setInt(3, categoryId);
+                stmt.setInt(4, supplierId);
+                stmt.setString(5, sku);
+                stmt.setString(6, barcode);
+                stmt.setString(7, inventoryTracking);
+                stmt.setString(8, baseUnit);
+                stmt.setDouble(9, price);
+                stmt.setDouble(10, discountPercent);
+                stmt.setDouble(11, cost);
+                stmt.setInt(12, initialStock);
+                stmt.setInt(13, initialStock);
+                stmt.setInt(14, reorderLevel);
+                stmt.setString(15, productType);
+                stmt.setString(16, imagePath);
+                stmt.setString(17, imagesJson);
+                stmt.setBoolean(18, isActive);
                 
-                if (productController != null) {
-                    productController.reloadTable();
-                }
+                int rowsInserted = stmt.executeUpdate();
+                
+                if (rowsInserted > 0) {
+                    ResultSet keys = stmt.getGeneratedKeys();
+                    int newProductId = -1;
+                    if (keys.next()) newProductId = keys.getInt(1);
+                    keys.close();
+                    
+                    String selectedType = cmbProductType.getValue() != null ? cmbProductType.getValue() : "simple";
+                    if ("variable".equalsIgnoreCase(selectedType)) {
+                        if (variantRows.isEmpty()) {
+                            AlertUtil.warning("Missing Variants", "Product type is variable. Please add at least 1 variant.");
+                            return;
+                        }
+                        insertVariants(newProductId);
+                    }
 
-                clearFields();
-                closeWindow();
+                    AlertUtil.info("Success", "Product saved successfully!");
+                    
+                    if (productController != null) productController.reloadTable();
+                    
+                    clearFields();
+                    variantRows.clear(); // clear variant list too
+                    closeWindow();
+                }
             }
 
-            stmt.close();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -208,6 +282,7 @@ public class AddProductController implements Initializable {
         txtBarcode.clear();
         txtBaseUnit.clear();
         txtPrice.clear();
+        txtDiscount.clear();
         txtCost.clear();
         txtInitialStock.clear();
         txtReorderLevel.clear();
@@ -229,4 +304,75 @@ public class AddProductController implements Initializable {
     public void setProductController(ProductController productController) {
         this.productController = productController;
     }
+
+    @FXML
+    private void addVariantRow() {
+        String name = vTxtName.getText().trim();
+        if (name.isEmpty()) {
+            AlertUtil.warning("Validation", "Variant name is required.");
+            return;
+        }
+
+        double price = parseD(vTxtPrice.getText());
+        double cost = parseD(vTxtCost.getText());
+        int stock = parseI(vTxtStock.getText());
+
+        variantRows.add(new VariantRow(
+                name,
+                vTxtSku.getText().trim(),
+                vTxtBarcode.getText().trim(),
+                price,
+                cost,
+                stock,
+                vChkActive.isSelected()
+        ));
+
+        vTxtName.clear();
+        vTxtSku.clear();
+        vTxtBarcode.clear();
+        vTxtPrice.clear();
+        vTxtCost.clear();
+        vTxtStock.clear();
+        vChkActive.setSelected(true);
+
+        AlertUtil.info("Added", "Variant added to list.");
+    }
+
+    @FXML
+    private void removeVariantRow() {
+        VariantRow selected = variantTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            AlertUtil.warning("No Selection", "Please select a variant to remove.");
+            return;
+        }
+        variantRows.remove(selected);
+        AlertUtil.info("Removed", "Variant removed.");
+    }
+
+    private int parseI(String s) { try { return Integer.parseInt(s.trim()); } catch (Exception e) { return 0; } }
+    private double parseD(String s) { try { return Double.parseDouble(s.trim()); } catch (Exception e) { return 0; } }
+    
+    
+    private void insertVariants(int productId) throws Exception {
+        String sql = "INSERT INTO productvariant (productId, name, sku, barcode, price, cost, stock, isActive, createdAt, updatedAt) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW())";
+
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (VariantRow v : variantRows) {
+                ps.setInt(1, productId);
+                ps.setString(2, v.getName());
+                ps.setString(3, v.getSku().isEmpty() ? null : v.getSku());
+                ps.setString(4, v.getBarcode().isEmpty() ? null : v.getBarcode());
+                ps.setDouble(5, v.getPrice());
+                ps.setDouble(6, v.getCost());
+                ps.setInt(7, v.getStock());
+                ps.setBoolean(8, v.getActive());
+                ps.addBatch();
+            }
+            ps.executeBatch();
+        }
+
+        AlertUtil.info("Variants Saved", "All variants saved successfully.");
+    }
+
 }

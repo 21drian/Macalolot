@@ -10,9 +10,10 @@ public class Category {
         this.id = id;
     }
 
-    public String getEmail() {
-        return category;
+    public String getCategory() {
+        return category; 
     }
+    
     public int getId() {
         return id;
     }

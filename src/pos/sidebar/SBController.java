@@ -47,9 +47,25 @@ public class SBController implements Initializable {
         cashierName.setText(UserSession.getEmail());
         roleType.setText(UserSession.getRole());
         
-        if (UserSession.getRole() != null && UserSession.getRole().equalsIgnoreCase("cashier")) {
-            btnDashboard.setVisible(false);
-            btnDashboard.setManaged(false);
+        boolean isCashier = UserSession.getRole() != null
+            && UserSession.getRole().equalsIgnoreCase("cashier");
+        
+//        if (UserSession.getRole() != null && UserSession.getRole().equalsIgnoreCase("cashier")) {
+//            btnDashboard.setVisible(false);
+//            btnDashboard.setManaged(false);
+//        }
+        
+         if (isCashier) {
+            // show ONLY transaction (sales)
+            btnDashboard.setVisible(false); btnDashboard.setManaged(false);
+            btnProduct.setVisible(false);   btnProduct.setManaged(false);
+            btnReport.setVisible(false);    btnReport.setManaged(false);
+
+            // rename Sales -> Transaction
+            btnSales.setText("Transaction");
+        } else {
+            // admin / others: normal
+            btnSales.setText("Sales");
         }
     }
 
@@ -77,4 +93,45 @@ public class SBController implements Initializable {
             stage.show();
         }
     }
+    
+    @FXML
+    private void handleDashboardAction(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pos/view/Dashboard.fxml"));
+        Parent root = loader.load();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
+    @FXML
+    private void handleSalesAction(ActionEvent event) throws IOException {
+
+        boolean isCashier = UserSession.getRole() != null
+                && UserSession.getRole().equalsIgnoreCase("cashier");
+
+        String fxml = isCashier
+                ? "/pos/view/Transaction.fxml"   
+                : "/pos/view/pos.fxml";
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
+        Parent root = loader.load();
+
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
+
+
+    @FXML
+    private void handleReportAction(javafx.event.ActionEvent event) throws java.io.IOException {
+        javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(getClass().getResource("/pos/view/Report.fxml"));
+        javafx.scene.Parent root = loader.load();
+
+        javafx.stage.Stage stage = (javafx.stage.Stage) ((javafx.scene.Node) event.getSource()).getScene().getWindow();
+        stage.setScene(new javafx.scene.Scene(root));
+        stage.show();
+    }
+
+
 }

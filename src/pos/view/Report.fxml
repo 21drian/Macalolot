@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="rootPane" prefHeight="800.0" prefWidth="1440.0"
+            xmlns="http://javafx.com/javafx/24.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="pos.controller.ReportController">
+
+    <stylesheets>
+        <!-- optional: reuse existing css or create report.css -->
+        <URL value="@/pos/css/product.css" />
+    </stylesheets>
+
+    <children>
+        <!-- Sidebar -->
+        <AnchorPane fx:id="sidebarContainer" layoutX="0.0" layoutY="0.0"
+                    prefHeight="800.0" prefWidth="250.0" />
+
+        <!-- Main background -->
+        <Rectangle arcWidth="5.0" fill="#f4f7fa"
+                   height="800.0" layoutX="250.0" strokeWidth="0.0" width="1210.0" />
+
+        <!-- Header -->
+        <HBox alignment="CENTER_LEFT" layoutX="260.0" layoutY="20.0"
+              prefHeight="70.0" prefWidth="820.0" spacing="10">
+            <children>
+                <Label text="Sales Report">
+                    <font>
+                        <Font name="Arial" size="24.0" />
+                    </font>
+                </Label>
+            </children>
+        </HBox>
+
+        <!-- Filters -->
+        <HBox layoutX="270.0" layoutY="80.0" spacing="10">
+            <children>
+                <Label text="From:" />
+                <DatePicker fx:id="dpFrom" />
+
+                <Label text="To:" />
+                <DatePicker fx:id="dpTo" />
+
+                <Button fx:id="btnGenerate" mnemonicParsing="false" onAction="#generateReport"
+                        style="-fx-background-color: #940857; -fx-text-fill: white;"
+                        text="Generate" />
+
+                <Button fx:id="btnExportCsv" mnemonicParsing="false" onAction="#exportCsv"
+                        text="Export CSV" />
+            </children>
+        </HBox>
+
+        <!-- Table -->
+        <TableView fx:id="tableView" layoutX="270.0" layoutY="130.0" prefHeight="480.0" prefWidth="1178.0">
+            <columns>
+                <TableColumn fx:id="colDate" prefWidth="180.0" text="Date/Time" />
+                <TableColumn fx:id="colProduct" prefWidth="260.0" text="Product" />
+                <TableColumn fx:id="colQty" prefWidth="80.0" text="Qty" />
+                <TableColumn fx:id="colTotal" prefWidth="120.0" text="Total" />
+            </columns>
+        </TableView>
+
+        <!-- Summary -->
+        <HBox layoutX="270.0" layoutY="630.0" spacing="30">
+            <children>
+                <HBox spacing="10">
+                    <children>
+                        <Label text="Transactions:" />
+                        <Label fx:id="lblTransactions" text="0" />
+                    </children>
+                </HBox>
+
+                <HBox spacing="10">
+                    <children>
+                        <Label text="Items Sold:" />
+                        <Label fx:id="lblItemsSold" text="0" />
+                    </children>
+                </HBox>
+
+                <HBox spacing="10">
+                    <children>
+                        <Label text="Total Sales:" />
+                        <Label fx:id="lblTotalSales" text="0.00" />
+                    </children>
+                </HBox>
+            </children>
+        </HBox>
+    </children>
+</AnchorPane>

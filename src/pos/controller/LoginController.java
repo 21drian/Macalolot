@@ -105,7 +105,7 @@ public class LoginController implements Initializable {
             root = loader.load();
             
         }else{
-            loader = new FXMLLoader(getClass().getResource("/pos/view/pos.fxml"));
+            loader = new FXMLLoader(getClass().getResource("/pos/view/Transaction.fxml"));
             root = loader.load();
         }
         

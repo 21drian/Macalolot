@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefWidth="400" prefHeight="300"
+            xmlns="http://javafx.com/javafx/24.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="pos.controller.CategoryManagementController">
+    
+    <stylesheets>
+        <URL value="@/pos/css/categorymanagement.css"/>
+    </stylesheets>
+
+    <VBox spacing="10" layoutX="20" layoutY="20">
+
+        <Label text="Manage Categories" style="-fx-font-size: 18;" />
+
+        <TableView fx:id="tableView" prefHeight="150">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="60"/>
+                <TableColumn fx:id="colName" text="Category Name" prefWidth="260"/>
+            </columns>
+        </TableView>
+
+        <TextField fx:id="txtName" promptText="Category Name"/>
+
+        <HBox spacing="10">
+            <Button text="Add" onAction="#addCategory"/>
+            <Button text="Update" onAction="#updateCategory"/>
+            <Button text="Delete" onAction="#deleteCategory"/>
+        </HBox>
+
+    </VBox>
+</AnchorPane>

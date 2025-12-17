@@ -26,6 +26,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import javafx.scene.image.ImageView;
 import pos.CRUD.AddProductController;
+import pos.util.AlertUtil;
+
 
 public class ProductController implements Initializable {
 
@@ -69,7 +71,7 @@ public class ProductController implements Initializable {
 
     private void loadSidebar() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/pos/sidebar/Sidebar.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/pos/sidebar/sidebar.fxml"));
             AnchorPane sidebar = loader.load();
             sidebarContainer.getChildren().setAll(sidebar);
         } catch (IOException e) {
@@ -165,4 +167,101 @@ public class ProductController implements Initializable {
     public void reloadTable() {
     loadProductData();
 }
+
+    @FXML
+    private void openCategoryManager() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pos/view/CategoryManagement.fxml"));
+        Stage stage = new Stage();
+        stage.setScene(new Scene(loader.load()));
+        stage.show();
+    }
+
+    @FXML
+    private void openSupplierManager() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/pos/view/SupplierManagement.fxml"));
+        Stage stage = new Stage();
+        stage.setScene(new Scene(loader.load()));
+        stage.show();
+    }
+
+    @FXML
+    private void openVariantManager() {
+        Product p = tableView.getSelectionModel().getSelectedItem();
+        if (p == null) {
+            AlertUtil.warning("No Product Selected", "Please select a product first.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/pos/view/VariantManagement.fxml"));
+            Parent root = loader.load();
+
+            VariantManagementController c = loader.getController();
+            c.setProduct(p.getId(), p.getName());
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            AlertUtil.info("Opened", "Variant manager opened.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertUtil.error("Error", "Unable to open Variant Manager.\n" + e.getMessage());
+        }
+    }
+
+
+    @FXML
+    private void openModifierManager() {
+        Product p = tableView.getSelectionModel().getSelectedItem();
+        if (p == null) {
+            AlertUtil.warning("No Product Selected", "Please select a product first.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/pos/view/ModifierManagement.fxml"));
+            Parent root = loader.load();
+
+            ModifierManagementController c = loader.getController();
+            c.setProduct(p.getId(), p.getName());
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            AlertUtil.info("Opened", "Modifier manager opened.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertUtil.error("Error", "Unable to open Modifier Manager.\n" + e.getMessage());
+        }
+    }
+
+
+    @FXML
+    private void openBundleManager() {
+        Product p = tableView.getSelectionModel().getSelectedItem();
+        if (p == null) {
+            AlertUtil.warning("No Product Selected", "Please select a product first.");
+            return;
+        }
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/pos/view/BundleManagement.fxml"));
+            Parent root = loader.load();
+
+            BundleManagementController c = loader.getController();
+            c.setBundleProduct(p.getId(), p.getName());
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            AlertUtil.info("Opened", "Bundle manager opened.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertUtil.error("Error", "Unable to open Bundle Manager.\n" + e.getMessage());
+        }
+    }
+
 }

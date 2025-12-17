@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefWidth="750" prefHeight="420"
+            xmlns="http://javafx.com/javafx/24.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="pos.controller.VariantManagementController">
+    
+        <stylesheets>
+            <URL value="@/pos/css/variantmanagement.css"/>
+        </stylesheets>
+    <VBox spacing="10" layoutX="15" layoutY="15">
+        <Label fx:id="lblTitle" text="Manage Variants" style="-fx-font-size: 18;"/>
+
+        <TableView fx:id="tableView" prefHeight="220">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="50"/>
+                <TableColumn fx:id="colName" text="Name" prefWidth="160"/>
+                <TableColumn fx:id="colSku" text="SKU" prefWidth="110"/>
+                <TableColumn fx:id="colBarcode" text="Barcode" prefWidth="110"/>
+                <TableColumn fx:id="colPrice" text="Price" prefWidth="80"/>
+                <TableColumn fx:id="colStock" text="Stock" prefWidth="70"/>
+                <TableColumn fx:id="colActive" text="Active" prefWidth="70"/>
+            </columns>
+        </TableView>
+
+        <HBox spacing="10">
+            <TextField fx:id="txtName" promptText="Variant name (e.g. 250ml)" prefWidth="160"/>
+            <TextField fx:id="txtSku" promptText="SKU" prefWidth="110"/>
+            <TextField fx:id="txtBarcode" promptText="Barcode" prefWidth="110"/>
+            <TextField fx:id="txtPrice" promptText="Price" prefWidth="80"/>
+            <TextField fx:id="txtCost" promptText="Cost" prefWidth="80"/>
+            <TextField fx:id="txtStock" promptText="Stock" prefWidth="70"/>
+            <CheckBox fx:id="chkActive" text="Active" selected="true"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Button text="Add" onAction="#addVariant"/>
+            <Button text="Update" onAction="#updateVariant"/>
+            <Button text="Delete" onAction="#deleteVariant"/>
+        </HBox>
+    </VBox>
+</AnchorPane>

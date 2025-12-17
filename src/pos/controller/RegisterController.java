@@ -119,7 +119,7 @@ public class RegisterController implements Initializable {
     }
     
     void registerUser(String email, String pass) {    
-        String role = "Cashier";
+        String role = "cashier";
         try{
             
             String sql = "INSERT INTO user (email, password, role) VALUES (?, ?, ?)";

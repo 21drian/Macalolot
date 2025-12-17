@@ -32,4 +32,30 @@ public class CategoryDAO {
 
         return categories;
     }
+    
+    public static void insertCategory(Connection conn, String name) {
+        try (PreparedStatement ps =
+             conn.prepareStatement("INSERT INTO category (name) VALUES (?)")) {
+            ps.setString(1, name);
+            ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    public static void updateCategory(Connection conn, int id, String name) {
+        try (PreparedStatement ps =
+             conn.prepareStatement("UPDATE category SET name=? WHERE id=?")) {
+            ps.setString(1, name);
+            ps.setInt(2, id);
+            ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
+    public static void deleteCategory(Connection conn, int id) {
+        try (PreparedStatement ps =
+             conn.prepareStatement("DELETE FROM category WHERE id=?")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (Exception e) { e.printStackTrace(); }
+    }
+
 }
